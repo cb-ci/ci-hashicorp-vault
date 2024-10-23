@@ -10,7 +10,7 @@ kubectl exec vault-0 -- sh -c "vault auth enable approle"
 
 # Create a Policy
 # We’ll create a policy that allows reading secrets. This policy will be attached to a role, which can be used to grant access to specific Kubernetes service accounts.
-kubectl cp vault-config/read-policy.hcl vault-0:/home/vault/jenkins-policy.hcl
+kubectl cp vault-config/jenkins-policy.hcl vault-0:/home/vault/jenkins-policy.hcl
 # Apply the Policy
 kubectl exec vault-0 -- sh -c "vault policy write jenkins /home/vault/jenkins-policy.hcl"
 
