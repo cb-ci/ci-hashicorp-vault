@@ -18,6 +18,17 @@ helm update -i vault hashicorp/vault \
        --set='ui.serviceType=ClusterIP' \
        --namespace $NS_VAULT
 
+kubectl port-forward service/vault-ui   8200:8200 -n $NS_VAULT
+open http://localhost:8200
+
+#Install with external IP and LB
+#helm update -i vault hashicorp/vault \
+#       --set='server.dev.enabled=true' \
+#       --set='ui.enabled=true' \
+#       --set='ui.serviceType=LoadBalancer' \
+#       --namespace $NS_VAULT
+
+
 kubectl get all -n $NS_VAULT
 
 # Create a Policy
