@@ -1,11 +1,4 @@
 #! /bin/bash
-
-
-
-
-
-
-
 # Used vor vault CLI
 export VAULT_ADDR='http://0.0.0.0:8200'
 
