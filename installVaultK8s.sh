@@ -10,10 +10,12 @@ helm repo add hashicorp https://helm.releases.hashicorp.com
 # This is useful for experimenting with Vault without needing to unseal, store keys, et. al.
 # All data is lost on restart — do not use dev mode for anything other than experimenting.
 # See https://developer.hashicorp.com/vault/docs/concepts/dev-server to know more
-helm install vault hashicorp/vault \
+# See https://artifacthub.io/packages/helm/hashicorp/vault?modal=values-schema
+# --set='ui.serviceType=LoadBalancer' \
+helm update -i vault hashicorp/vault \
        --set='server.dev.enabled=true' \
        --set='ui.enabled=true' \
-       --set='ui.serviceType=LoadBalancer' \
+       --set='ui.serviceType=ClusterIP' \
        --namespace $NS_VAULT
 
 kubectl get all -n $NS_VAULT
@@ -30,7 +32,6 @@ kubectl exec vault-0 -- sh -c "vault auth enable kubernetes"
 
 # Configure Kubernetes Authentication
 # Configure Vault to communicate with the Kubernetes API server:
-
 kubectl exec vault-0 -- sh -c 'vault write auth/kubernetes/config \
                                token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
                                kubernetes_host=https://${KUBERNETES_PORT_443_TCP_ADDR}:443 \
@@ -40,12 +41,16 @@ kubectl exec vault-0 -- sh -c 'vault write auth/kubernetes/config \
 # Create a role(vault-role) that binds the above policy to a Kubernetes service account(vault-serviceaccount) in a specific namespace.
 # This allows the service account to access secrets stored in Vault:
 
-kubectl exec vault-0 -- sh -c "vault write auth/kubernetes/role/vault-role \
-                                bound_service_account_names=vault-serviceaccount \
-                                bound_service_account_namespaces=vault \
-                                policies=read-policy \
-                                ttl=1h"
+SERVICE_ACCOUNT_VAULT=vault-serviceaccount
+SERVICE_ACCOUNT_CLOUDBEES=jenkins
 
+# Bind SA SERVICE_ACCOUNT_VAULT to the read-policy in vault namespace
+kubectl exec vault-0 -- sh -c "vault write auth/kubernetes/role/vault-role \
+                               bound_service_account_names=$SERVICE_ACCOUNT_VAULT \
+                               bound_service_account_namespaces=vault \
+                               policies=read-policy \
+                               ttl=1h"
+# Bind SA SERVICE_ACCOUNT_CLOUDBEES to the read-policy in cloudbees-core namespace
 kubectl exec vault-0 -- sh -c "vault write auth/kubernetes/role/cloudbees \
                                bound_service_account_names=jenkins \
                                bound_service_account_namespaces=cloudbees-core \
@@ -53,25 +58,22 @@ kubectl exec vault-0 -- sh -c "vault write auth/kubernetes/role/cloudbees \
                                ttl=1h"
 
 # Create Secrets
-
-#kubectl exec vault-0 -- sh -c "vault kv put secret/login pattoken=shdfsdfgjrtvrovfhsdvef"
-
 kubectl exec vault-0 -- sh -c "vault kv put secret/cloudbees-login username=admin password=admin"
-
 kubectl exec vault-0 -- sh -c "vault kv list secret/cloudbees-login"
-
-kubectl exec vault-0 -- sh -c "vault kv get  secret/cloudbees-login"
-
-
-#  Create Test Deployment
+kubectl exec vault-0 -- sh -c "vault kv get secret/cloudbees-login"
 
 
-cat << EOF | kubectl apply -f -
- apiVersion: v1
- kind: ServiceAccount
- metadata:
-   name: vault-serviceaccount
-   labels:
-     app: read-vault-secret
+# Create Service Account SERVICE_ACCOUNT_VAULT in vault namespace
+kubectl apply -f yaml/valutServiceAccount.yaml -n $NS_VAULT
 
-EOF
+#  Create Test Deployment in vault namespace
+# This deployment manifest creates a single replica of an Nginx pod configured to securely fetch secrets from Vault.
+# The Vault Agent injects the secrets cloudbees-login into the pod according to the specified templates.
+# The secrets are stored in the pod's filesystem and can be accessed by the application running in the container.
+# The SERVICE_ACCOUNT_VAULT service account, which has the necessary permissions, is used to authenticate with Vault.
+kubectl apply -f yaml/vaultTestDeployment.yaml -n $NS_VAULT
+
+# Read secret
+kubectl exec deployment.apps/vault-test -c nginx  -- sh -c "cat /vault/secrets/cloudbees-login" -n $NS_VAULT
+
+
