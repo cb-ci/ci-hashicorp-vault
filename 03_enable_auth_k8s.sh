@@ -18,8 +18,6 @@ kubectl  exec -n $NAMESPACE_VAULT vault-0 -- sh -c 'vault write auth/kubernetes/
 # Create a role(vault-role) that binds the above policy to a Kubernetes service account(vault-serviceaccount) in a specific namespace.
 # This allows the service account to access secrets stored in Vault:
 
-
-
 # Bind SA SERVICE_ACCOUNT_VAULT to the read-policy in vault namespace
 kubectl  exec -n $NAMESPACE_VAULT vault-0 -- sh -c "vault write auth/kubernetes/role/vault-role \
                                bound_service_account_names=$SERVICE_ACCOUNT_VAULT \
@@ -36,4 +34,5 @@ kubectl  exec -n $NAMESPACE_VAULT vault-0 -- sh -c "vault write auth/kubernetes/
 
 
 # Create Service Account SERVICE_ACCOUNT_VAULT in vault namespace
+# We need this for the yaml/vaultTestDeployment.yaml
 kubectl apply -f yaml/vaultServiceAccount.yaml -n $NAMESPACE_VAULT
