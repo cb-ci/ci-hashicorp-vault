@@ -1,9 +1,12 @@
 path "secret*" {
   capabilities = ["read"]
 }
-path "kv1-secrets*" {
+path "secrets*" {
   capabilities = ["read"]
 }
-path "kv2-secrets*" {
+path "secrets-kv1*" {
+  capabilities = ["read"]
+}
+path "secrets-kv2*" {
   capabilities = ["read"]
 }

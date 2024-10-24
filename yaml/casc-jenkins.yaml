@@ -10,7 +10,7 @@ credentials:
               vaultSecretEngine:
                 genericKV1SecretEngine:
                   authenticationId: "vault"
-                  path: "secrets/cloudbees-login"
+                  path: "${SECRET_PATH_KV1}/cloudbees-login"
 globalCredentialsConfiguration:
   configuration:
     providerFilter: "none"

@@ -12,9 +12,6 @@ source ./setEnv.sh
 # Enable the AppRole auth method:
 kubectl exec -n $NAMESPACE_VAULT vault-0 -- sh -c "vault auth enable approle"
 
-# TODO
-#kubectl exec vault-0 -- sh -c "vault secrets enable -path=secrets kv"
-
 # Create a named role:
 # token_num_uses: If the token issued by your approle needs the ability to create child tokens, you will need to set token_num_uses to 0.
 # secret_id_num_uses=0: Creating unlimited secrets
