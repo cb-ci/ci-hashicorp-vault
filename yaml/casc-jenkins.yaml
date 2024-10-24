@@ -3,15 +3,6 @@ credentials:
     domainCredentials:
       - credentials:
           - vaultUsernamePassword:
-              description: "vault-kv1-mysecret"
-              id: "vault-kv1-mysecret"
-              passwordKey: "password"
-              usernameKey: "username"
-              vaultSecretEngine:
-                genericKV1SecretEngine:
-                  authenticationId: "vault"
-                  path: "kv1-secrets/mysecret-v1"
-          - vaultUsernamePassword:
               description: "vault-cloudbees-login"
               id: "vault-cloudbees-login"
               passwordKey: "password"
@@ -19,7 +10,7 @@ credentials:
               vaultSecretEngine:
                 genericKV1SecretEngine:
                   authenticationId: "vault"
-                  path: "kv1-secrets/cloudbees-login"
+                  path: "secrets/cloudbees-login"
 globalCredentialsConfiguration:
   configuration:
     providerFilter: "none"
@@ -28,7 +19,7 @@ globalCredentialsConfiguration:
     authentications:
       - appRoleAuthentication:
           id: "vault"
-          roleId: "88d69714-0e7f-7a6d-e188-81a14d773d09"
-          secretId: "{AQAAABAAAAAwHJCfm8lzs3muZTn4qL8nYsJ2oIf7piwr2VRx88jNna5HmEGn4LLkInvy7Z2boPjJXV/mihEhfueLVeYl4Msq0g==}"
+          roleId: ${VAULT_APPROLE_ROLE_ID}
+          secretId: ${VAULT_APPROLE_SECRET_ID}
     skipSslVerification: true
     url: "http://vault.vault.svc.cluster.local:8200"
