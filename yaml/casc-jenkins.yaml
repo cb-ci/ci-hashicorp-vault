@@ -2,6 +2,7 @@ credentials:
   cloudbeesHashicorpVault:
     domainCredentials:
       - credentials:
+          #KV1
           - vaultUsernamePassword:
               description: "vault-cloudbees-login"
               id: "vault-cloudbees-login"
@@ -11,6 +12,27 @@ credentials:
                 genericKV1SecretEngine:
                   authenticationId: "vault"
                   path: "${SECRET_PATH_KV1}/cloudbees-login"
+          #KV2
+          - vaultUsernamePassword:
+              description: "vault-kv2-cloudbees-login"
+              id: "vault-kv2-cloudbees-login"
+              passwordKey: "password"
+              usernameKey: "username"
+              vaultSecretEngine:
+                genericKV2SecretEngine:
+                  authenticationId: "vault"
+                  mountPath: "${SECRET_PATH_KV2}"
+                  path: "cloudbees-login"
+          #SSH
+          - vaultSshPrivateKey:
+              description: "vault-ssh-hey-gh"
+              id: "vault-ssh-hey-gh"
+              privateKeyVaultKey: "sshkey"
+              usernameKey: "username"
+              vaultSecretEngine:
+                genericKV1SecretEngine:
+                  authenticationId: "vault"
+                  path: "${SECRET_PATH_KV1}/ssh-gh"
 globalCredentialsConfiguration:
   configuration:
     providerFilter: "none"
