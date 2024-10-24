@@ -1,6 +1,6 @@
 #! /bin/bash
 
-source ./setEnvs.sh
+source ./setEnv.sh
 
 #kubectl config set-context --current --namespace=$NAMESPACE_VAULT
 
@@ -15,4 +15,4 @@ kubectl rollout status deployment.apps/vault-test --timeout 1m
 
 
 # Read secret
-kubectl exec deployment.apps/vault-test -c nginx  -- sh -c "cat /vault/secrets/cloudbees-login" -n $NAMESPACE_VAULT
+kubectl exec -n $NAMESPACE_VAULT deployment.apps/vault-test -c nginx  -- sh -c "cat /vault/secrets/cloudbees-login"

@@ -1,6 +1,6 @@
 #! /bin/bash
 
-source ./setEnvs.sh
+source ./setEnv.sh
 
 # delete vault
 helm uninstall vault --namespace $NAMESPACE_VAULT

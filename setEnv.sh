@@ -1,5 +1,6 @@
 #! /bin/bash
 
+set -x
 export SERVICE_ACCOUNT_VAULT=vault-serviceaccount
 export SERVICE_ACCOUNT_CLOUDBEES=jenkins
 export NAMESPACE_CLOUDBEES=cloudbees-core

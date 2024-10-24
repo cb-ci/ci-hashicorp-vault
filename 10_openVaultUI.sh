@@ -1,6 +1,6 @@
 #! /bin/bash
 
-source ./setEnvs.sh
+source ./setEnv.sh
 
 kubectl port-forward service/vault-ui   8200:8200 -n $NAMESPACE_VAULT
 echo "use default login token: 'root'"

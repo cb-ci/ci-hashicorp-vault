@@ -1,6 +1,6 @@
 #! /bin/bash
 
-source ./setEnvs.sh
+source ./setEnv.sh
 
 kubectl create ns $NAMESPACE_VAULT || true
 
