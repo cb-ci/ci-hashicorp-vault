@@ -17,7 +17,7 @@ kubectl exec -n $NAMESPACE_VAULT vault-0 -- sh -c "vault auth enable approle"
 # secret_id_num_uses=0: Creating unlimited secrets
 # policies: Creating policy with the name of “Jenkins”
 kubectl exec -n $NAMESPACE_VAULT vault-0 -- sh -c "vault write -format=json auth/approle/role/jenkins-role token_num_uses=0 secret_id_num_uses=0 policies=$VAULT_POLICY_READ"
-kubectl exec -n $NAMESPACE_VAULT vault-0 -- sh -c "vault read -format=json auth/approle/role/jenkins-role" -n $NAMESPACE_VAULT
+kubectl exec -n $NAMESPACE_VAULT vault-0 -- sh -c "vault read  -format=json auth/approle/role/jenkins-role" -n $NAMESPACE_VAULT
 
 # Fetch the RoleID of the AppRole:
 export VAULT_APPROLE_ROLE_ID=$(kubectl exec -n $NAMESPACE_VAULT vault-0 -- sh -c 'vault read  -format=json auth/approle/role/jenkins-role/role-id' |  jq -cr  '.data.role_id')
