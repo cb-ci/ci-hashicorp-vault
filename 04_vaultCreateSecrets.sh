@@ -3,7 +3,6 @@
 source ./setEnv.sh
 
 #kubectl config set-context --current --namespace=$NAMESPACE_VAULT
-
 #kubectl exec -n $NAMESPACE_VAULT  vault-0 -- sh -c "vault secrets enable -mount=secrets kv"
 
 # Create Secrets KV1
