@@ -18,7 +18,7 @@ The scripts in this repository  are about to:
 
 | Script                                                 | Note                                                                                                               |
 |--------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|
-| [00_runAll.sh](00_runAll.sh)                           | Executes all scripts, except the `11_uninstallVault.sh`                                                            |
+| [00_runAll.sh](./00_runAll.sh)                         | Executes all scripts, except the `11_uninstallVault.sh`                                                            |
 | [01_installVaultK8s.sh](01_installVaultK8s.sh)         | Install Hashi Corp vault in developer mode in a new vault namespace                                                |
 | [02_applyPolicies.sh](02_applyPolicies.sh)             | Apply the read policies                                                                                            |
 | [03_enable_auth_Approle.sh](03_enable_auth_Approle.sh) | Enable `Approle` auth for CloudBees CI                                                                               |
