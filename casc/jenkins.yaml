@@ -12,7 +12,7 @@ credentials:
           vaultSecretEngine:
             genericKV1SecretEngine:
               authenticationId: "vault"
-              path: "${SECRET_PATH_KV1}/cloudbees-login"
+              path: "secrets-kv1/cloudbees-login"
       #KV2
       - vaultUsernamePassword:
           description: "vault-kv2-cloudbees-login"
@@ -22,7 +22,7 @@ credentials:
           vaultSecretEngine:
             genericKV2SecretEngine:
               authenticationId: "vault"
-              mountPath: "${SECRET_PATH_KV2}"
+              mountPath: "secrets-kv2"
               path: "cloudbees-login"
         #SSH KV1
       - vaultSshPrivateKey:
@@ -33,7 +33,7 @@ credentials:
           vaultSecretEngine:
             genericKV1SecretEngine:
               authenticationId: "vault"
-              path: "${SECRET_PATH_KV1}/ssh-gh"
+              path: "secrets-kv1/ssh-gh"
 jenkins:
   authorizationStrategy: "cloudBeesRoleBasedAccessControl"
   clouds:
@@ -62,7 +62,7 @@ globalCredentialsConfiguration:
     authentications:
     - appRoleAuthentication:
         id: "vault"
-        roleId: ${VAULT_APPROLE_ROLE_ID}
-        secretId: ${VAULT_APPROLE_SECRET_ID}
+        roleId: 4040ff41-c4a5-efac-f6e8-c8838c23fad1
+        secretId: 85e70858-f941-7118-684b-c9fe66e4d3a2
     skipSslVerification: true
     url: "http://vault.vault.svc.cluster.local:8200"

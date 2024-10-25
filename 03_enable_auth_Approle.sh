@@ -29,5 +29,7 @@ echo "VAULT_APPROLE_ROLE_ID=$VAULT_APPROLE_ROLE_ID"
 echo "VAULT_APPROLE_SECRET_ID=$VAULT_APPROLE_SECRET_ID"
 
 echo "#################################################"
-echo "CloudBees Casc jenkins.yaml:"
-envsubst < yaml/casc-jenkins.yaml | tee gen-casc-jenkins.yaml
+echo "Update CloudBees Casc in casc directory"
+envsubst < casc/jenkins.yaml > casc/jenkins.yaml.tmp
+diff casc/jenkins.yaml  casc/jenkins.yaml.tmp
+mv casc/jenkins.yaml.tmp casc/jenkins.yaml
