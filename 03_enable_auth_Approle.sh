@@ -24,12 +24,17 @@ export VAULT_APPROLE_ROLE_ID=$(kubectl exec -n $NAMESPACE_VAULT vault-0 -- sh -c
 # Get a SecretID issued against the AppRole:
 export VAULT_APPROLE_SECRET_ID=$(kubectl exec -n $NAMESPACE_VAULT vault-0 -- sh -c 'vault write -format=json -f auth/approle/role/jenkins-role/secret-id' |  jq -cr  '.data.secret_id')
 
+# Required for CasC bundle update
 echo "#################################################"
-echo "VAULT_APPROLE_ROLE_ID=$VAULT_APPROLE_ROLE_ID"
-echo "VAULT_APPROLE_SECRET_ID=$VAULT_APPROLE_SECRET_ID"
+GEN_DIR=generated
+mkdir -p $GEN_DIR
+echo "APPROLE ROLE_ID and SECRET_ID will be generated into $GEN_DIR directory"
+echo "VAULT_APPROLE_ROLE_ID=$VAULT_APPROLE_ROLE_ID" | tee $GEN_DIR/vault_role_id
+echo "VAULT_APPROLE_SECRET_ID=$VAULT_APPROLE_SECRET_ID" | tee $GEN_DIR/vault_secret_id
 
 echo "#################################################"
-echo "Update CloudBees Casc in casc directory"
-envsubst < casc/jenkins.yaml > casc/jenkins.yaml.tmp
-diff casc/jenkins.yaml  casc/jenkins.yaml.tmp
-mv casc/jenkins.yaml.tmp casc/jenkins.yaml
+echo "Controller CasC bundle will be generated into $GEN_DIR directory"
+cp -Rf casc $GEN_DIR/
+envsubst < casc/jenkins.yaml > $GEN_DIR/casc/jenkins.yaml
+diff casc/jenkins.yaml  $GEN_DIR/casc/jenkins.yaml
+
