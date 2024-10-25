@@ -1,0 +1,68 @@
+credentials:
+  system:
+  cloudbeesHashicorpVault:
+    domainCredentials:
+    - credentials:
+      #KV1
+      - vaultUsernamePassword:
+          description: "vault-cloudbees-login"
+          id: "vault-cloudbees-login"
+          passwordKey: "password"
+          usernameKey: "username"
+          vaultSecretEngine:
+            genericKV1SecretEngine:
+              authenticationId: "vault"
+              path: "${SECRET_PATH_KV1}/cloudbees-login"
+      #KV2
+      - vaultUsernamePassword:
+          description: "vault-kv2-cloudbees-login"
+          id: "vault-kv2-cloudbees-login"
+          passwordKey: "password"
+          usernameKey: "username"
+          vaultSecretEngine:
+            genericKV2SecretEngine:
+              authenticationId: "vault"
+              mountPath: "${SECRET_PATH_KV2}"
+              path: "cloudbees-login"
+        #SSH KV1
+      - vaultSshPrivateKey:
+          description: "vault-ssh-hey-gh"
+          id: "vault-ssh-hey-gh"
+          privateKeyVaultKey: "sshkey"
+          usernameKey: "username"
+          vaultSecretEngine:
+            genericKV1SecretEngine:
+              authenticationId: "vault"
+              path: "${SECRET_PATH_KV1}/ssh-gh"
+jenkins:
+  authorizationStrategy: "cloudBeesRoleBasedAccessControl"
+  clouds:
+  - "operationsCenterAgentProvisioningService"
+  disabledAdministrativeMonitors:
+  - "hudson.util.DoubleLaunchChecker"
+  labelAtoms:
+  - name: "built-in"
+  securityRealm: "operationsCenter"
+  slaveAgentPort: -1
+  updateCenter:
+    sites:
+    - id: "core-mm-offline"
+      url: "file:/tmp/jenkins/war/WEB-INF/plugins/update-center.json"
+    - id: "cap-core-mm"
+      url: "https://jenkins-updates.cloudbees.com/update-center/envelope-core-mm/update-center.json"
+  views:
+  - all:
+      name: "all"
+  viewsTabBar: "standard"
+globalCredentialsConfiguration:
+  configuration:
+    providerFilter: "none"
+    typeFilter: "none"
+  vaultGlobalConfiguration:
+    authentications:
+    - appRoleAuthentication:
+        id: "vault"
+        roleId: ${VAULT_APPROLE_ROLE_ID}
+        secretId: ${VAULT_APPROLE_SECRET_ID}
+    skipSslVerification: true
+    url: "http://vault.vault.svc.cluster.local:8200"
