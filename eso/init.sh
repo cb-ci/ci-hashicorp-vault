@@ -20,7 +20,7 @@ echo $VAULT_SECRET
 #    --data '{"role_id":"188......","secret_id":"c839......"}' \
 #    http://vault.vault.svc.cluster.local:8200/v1/auth/approle/login
 
-# kubectl get secretsores -A
+# kubectl get secretstores -A 
 # kubectl get events
 
 
